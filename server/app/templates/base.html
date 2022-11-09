@@ -14,7 +14,7 @@
 <body>
 <header class="navbar navbar-expand-sm navbar-dark bg-dark" aria-label="Header">
     <div class="container">
-        <a href="{{ url_for('chat.index') }}" class="navbar-brand">Фиксик</a>
+        <a href="{{ url_for('main.index') }}" class="navbar-brand">Фиксик</a>
         <button class="navbar-toggler p-0 border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#header" aria-controls="header">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -30,15 +30,15 @@
                         <p id="get-user-name" class="my-0 dropdown-toggle">{{ current_user.user_name }}</p>
                     </a>
                     <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser">
-                            <li><a class="dropdown-item" href="{{ url_for('chat.profile') }}">Профиль</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('chat.profile_settings') }}">Настройки</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('main.profile') }}">Профиль</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('main.profile_settings') }}">Настройки</a></li>
                             <li><hr class="dropdown-divider "></li>
-                            <li><a class="dropdown-item" href="{{ url_for('chat.logout') }}">Выйти</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('main.logout') }}">Выйти</a></li>
                     </ul>
                 </li>
                 {% else %}
                     <li class="nav-item">
-                        <a class="nav-link active text-decoration-none" href="{{ url_for('chat.login') }}">Авторизация</a>
+                        <a class="nav-link active text-decoration-none" href="{{ url_for('main.login') }}">Авторизация</a>
                     </li>
                 {% endif %}
             </ul>

@@ -8,7 +8,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from server.app import db, login_manager
 
-login_manager.login_view = 'chat.login'
+login_manager.login_view = 'main.login'
 login_manager.login_message = "Авторизуйтесь для доступа к закрытым страницам"
 login_manager.login_message_category = "error"
 

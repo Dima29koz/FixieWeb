@@ -30,7 +30,7 @@ def login():
     logs in user after verification
     """
     if current_user.is_authenticated:
-        return redirect(request.args.get("next") or url_for('chat.profile'))
+        return redirect(request.args.get("next") or url_for('main.profile'))
 
     form = LoginForm()
     if form.validate_on_submit():
@@ -38,7 +38,7 @@ def login():
         if user and user.check_password(form.pwd.data):
             rm = form.remember.data
             login_user(user, remember=rm)
-            return redirect(request.args.get("next") or url_for('chat.profile'))
+            return redirect(request.args.get("next") or url_for('main.profile'))
         flash("Неверная пара логин/пароль", "error")
     return render_template("profile/login.html", form=form)
 
@@ -53,7 +53,7 @@ def reset_password_request():
         if user:
             send_password_reset_email(user)
         flash('Проверьте вашу почту и следуйте инструкциям для сброса пароля', 'info')
-        return redirect(url_for('chat.login'))
+        return redirect(url_for('main.login'))
     return render_template('profile/reset_password_request.html', form=form)
 
 
@@ -66,9 +66,10 @@ def registration():
     """
     form = RegistrationForm()
     if form.validate_on_submit():
-        User(form.username.data, form.user_email.data, form.pwd.data)
+        user = User(form.username.data, form.user_email.data, form.pwd.data)
+        send_email_confirmation_mail(user)
         flash('Проверьте вашу почту и следуйте инструкциям для её подтверждения', 'info')
-        return redirect(url_for('chat.login'))
+        return redirect(url_for('main.login'))
     return render_template('profile/registration.html', form=form)
 
 
@@ -178,7 +179,7 @@ def profile_settings_pwd():
 def confirm_email(token):
     user = User.verify_token(token, 'confirm_email')
     if not user:
-        return redirect(url_for('chat.index'))
+        return redirect(url_for('main.index'))
     user.verify_email()
     return render_template('profile/email_confirmed.html')
 
@@ -194,7 +195,7 @@ def reset_password(token):
     if form.validate_on_submit():
         user.set_pwd(form.new_pwd.data)
         flash('Your password has been reset.', 'info')
-        return redirect(url_for('chat.login'))
+        return redirect(url_for('main.login'))
     return render_template('profile/reset_password.html', form=form)
 
 
@@ -206,4 +207,4 @@ def logout():
     logs out user
     """
     logout_user()
-    return redirect(url_for('chat.index'))
+    return redirect(url_for('main.index'))

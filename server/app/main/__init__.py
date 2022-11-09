@@ -4,6 +4,6 @@ Initialization of BluePrints
 
 from flask import Blueprint
 
-chat = Blueprint('chat', __name__)
+chat = Blueprint('main', __name__)
 
 from . import routes

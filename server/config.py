@@ -14,6 +14,7 @@ class BaseConfig:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     DEBUG_TB_INTERCEPT_REDIRECTS = False
     MANAGE_SESSION = True
+    MAIL_DEBUG = False
     MAIL_SERVER = 'smtp.googlemail.com'
     MAIL_PORT = 587
     MAIL_USE_TLS = True
@@ -29,7 +30,6 @@ class DevelopmentConfig(BaseConfig):
     DEBUG = True
     LOGGER = True
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(app_dir, 'fixie.db')
-
 
 
 class TestConfig(BaseConfig):
