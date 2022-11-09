@@ -6,7 +6,16 @@ from flask import current_app
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from server.app import db
+from server.app import db, login_manager
+
+login_manager.login_view = 'chat.login'
+login_manager.login_message = "Авторизуйтесь для доступа к закрытым страницам"
+login_manager.login_message_category = "error"
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return get_user_by_id(user_id)
 
 
 class User(db.Model, UserMixin):

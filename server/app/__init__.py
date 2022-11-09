@@ -31,8 +31,10 @@ def create_app(config) -> Flask:
         db.create_all()
 
     from .chat import chat as chat_blueprint
+    from .api import api as api_blueprint
 
     app.register_blueprint(chat_blueprint)
+    app.register_blueprint(api_blueprint)
 
     sio.init_app(app, logger=config.LOGGER, manage_session=config.MANAGE_SESSION)
 

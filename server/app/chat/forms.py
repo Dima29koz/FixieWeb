@@ -9,7 +9,7 @@ class RegistrationForm(FlaskForm):
     """
     Registration form
 
-    :cvar username: user nickname
+    :cvar username: username
     :type username: StringField
     :cvar pwd: user password
     :type pwd: PasswordField
@@ -18,7 +18,7 @@ class RegistrationForm(FlaskForm):
     :cvar submit: submit field
     :type submit: SubmitField
     """
-    username = StringField('Никнейм:')
+    username = StringField('Имя пользователя:')
     user_email = EmailField('Почта:', validators=[DataRequired(),
                                                   Email(message='Введен некорректный email адрес')])
     pwd = PasswordField('Пароль:', validators=[DataRequired()])
@@ -30,20 +30,20 @@ class RegistrationForm(FlaskForm):
         """
         username validator
 
-        :param username: user nickname
+        :param username: username
         :type username: StringField
-        :raises ValidationError: if nickname is already taken
+        :raises ValidationError: if username is already taken
         """
         user_obj = get_user_by_name(username.data)
         if user_obj:
-            raise ValidationError('Пользователь с таким ником уже существует')
+            raise ValidationError('Пользователь с таким именем уже существует')
 
 
 class LoginForm(FlaskForm):
     """
     Login form
 
-    :cvar name: user nickname
+    :cvar name: username
     :type name: StringField
     :cvar pwd: user password
     :type pwd: PasswordField
@@ -52,9 +52,9 @@ class LoginForm(FlaskForm):
     :cvar submit: submit field
     :type submit: SubmitField
     """
-    name = StringField("Никнейм: ", validators=[DataRequired('Поле не заполнено')])
-    pwd = PasswordField("Пароль: ", validators=[DataRequired('Поле не заполнено')])
-    remember = BooleanField(" Запомнить ", default=False)
+    name = StringField("Имя пользователя:", validators=[DataRequired('Поле не заполнено')])
+    pwd = PasswordField("Пароль:", validators=[DataRequired('Поле не заполнено')])
+    remember = BooleanField("Запомнить", default=False)
     submit = SubmitField("Войти")
 
 
@@ -66,20 +66,20 @@ class ChangeEmailForm(FlaskForm):
 
 
 class ChangeNameForm(FlaskForm):
-    new_name = StringField('Новый никнейм:', validators=[DataRequired()])
+    new_name = StringField('Новое имя пользователя:', validators=[DataRequired()])
     submit = SubmitField("Сохранить никнейм", id='ChangeName')
 
     def validate_username(self, new_name: StringField):
         """
         username validator
 
-        :param new_name: user nickname
+        :param new_name: username
         :type new_name: StringField
-        :raises ValidationError: if nickname is already taken
+        :raises ValidationError: if username is already taken
         """
         user_obj = get_user_by_name(new_name.data)
         if user_obj:
-            raise ValidationError('Пользователь с таким ником уже существует')
+            raise ValidationError('Пользователь с таким именем уже существует')
 
 
 class ChangePwdForm(FlaskForm):
@@ -92,5 +92,5 @@ class ChangePwdForm(FlaskForm):
 
 
 class ResetPasswordRequestForm(FlaskForm):
-    username = StringField('Никнейм:', validators=[DataRequired()])
+    username = StringField('Имя пользователя:', validators=[DataRequired()])
     submit = SubmitField('Запросить сброс пароля')
