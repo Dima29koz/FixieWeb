@@ -30,7 +30,7 @@ def login():
     logs in user after verification
     """
     if current_user.is_authenticated:
-        return redirect(request.args.get("next") or url_for('main.profile'))
+        return redirect(request.args.get("next") or url_for('main.profile_settings'))
 
     form = LoginForm()
     if form.validate_on_submit():
@@ -38,7 +38,7 @@ def login():
         if user and user.check_password(form.pwd.data):
             rm = form.remember.data
             login_user(user, remember=rm)
-            return redirect(request.args.get("next") or url_for('main.profile'))
+            return redirect(request.args.get("next") or url_for('main.profile_settings'))
         flash("Неверная пара логин/пароль", "error")
     return render_template("profile/login.html", form=form)
 
@@ -71,13 +71,6 @@ def registration():
         flash('Проверьте вашу почту и следуйте инструкциям для её подтверждения', 'info')
         return redirect(url_for('main.login'))
     return render_template('profile/registration.html', form=form)
-
-
-@chat.route('/profile')
-@login_required
-def profile():
-    """view of `profile` page"""
-    return render_template('profile/profile.html')
 
 
 @chat.route('/profile_settings')
