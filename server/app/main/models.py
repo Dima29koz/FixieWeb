@@ -6,7 +6,8 @@ from flask import current_app
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from server.app import db, login_manager
+from server.app import login_manager, db
+
 
 login_manager.login_view = 'main.login'
 login_manager.login_message = "Авторизуйтесь для доступа к закрытым страницам"
@@ -16,6 +17,13 @@ login_manager.login_message_category = "error"
 @login_manager.user_loader
 def load_user(user_id):
     return get_user_by_id(user_id)
+
+
+user_roles = db.Table(
+    'user_roles',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+    db.Column('role_id', db.Integer, db.ForeignKey('roles.id'))
+)
 
 
 class User(db.Model, UserMixin):
@@ -43,6 +51,7 @@ class User(db.Model, UserMixin):
     is_email_verified = db.Column(db.Boolean, default=False)
     pwd = db.Column(db.String(256), nullable=False)
     date = db.Column(db.DateTime, default=datetime.utcnow)
+    roles = db.relationship('Role', secondary='user_roles', backref=db.backref('users', lazy=True))
 
     def __repr__(self):
         return '<User %r>' % self.id
@@ -106,3 +115,9 @@ def get_user_by_id(user_id: int) -> User | None:
 def get_user_by_name(user_name: str) -> User | None:
     """returns user by user_name if user exists"""
     return User.query.filter_by(user_name=user_name).first()
+
+
+class Role(db.Model):
+    __tablename__ = 'roles'
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(50), unique=True)

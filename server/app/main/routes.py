@@ -3,7 +3,7 @@ from flask_login import logout_user, current_user, login_user, login_required
 
 from . import main
 from .forms import LoginForm, ResetPasswordRequestForm, RegistrationForm, ChangeEmailForm, ChangeNameForm, ChangePwdForm
-from ..models.user import get_user_by_name, User
+from .models import User, get_user_by_name
 from ...utils.hider import get_hidden_email, get_hidden_pwd
 from ...utils.mail_utils import send_password_reset_email, send_email_confirmation_mail
 
