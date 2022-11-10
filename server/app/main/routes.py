@@ -168,7 +168,6 @@ def profile_settings_pwd():
 
 
 @main.route('/confirm_email/<token>', methods=['GET', 'POST'])
-@login_required
 def confirm_email(token):
     user = User.verify_token(token, 'confirm_email')
     if not user:

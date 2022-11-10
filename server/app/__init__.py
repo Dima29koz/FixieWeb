@@ -31,9 +31,11 @@ def create_app(config) -> Flask:
         db.create_all()
 
     from .main import main as main_blueprint
+    from .messenger import messenger as messenger_blueprint
     from .api import api as api_blueprint
 
     app.register_blueprint(main_blueprint)
+    app.register_blueprint(messenger_blueprint)
     app.register_blueprint(api_blueprint)
 
     sio.init_app(app, logger=config.LOGGER, manage_session=config.MANAGE_SESSION)
