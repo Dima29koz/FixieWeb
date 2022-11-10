@@ -30,7 +30,7 @@ def create_app(config) -> Flask:
     with app.test_request_context():
         db.create_all()
 
-    from .main import chat as main_blueprint
+    from .main import main as main_blueprint
     from .api import api as api_blueprint
 
     app.register_blueprint(main_blueprint)

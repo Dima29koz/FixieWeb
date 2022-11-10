@@ -1,26 +1,26 @@
 from flask import render_template, redirect, url_for, request, flash
 from flask_login import logout_user, current_user, login_user, login_required
 
-from . import chat
+from . import main
 from .forms import LoginForm, ResetPasswordRequestForm, RegistrationForm, ChangeEmailForm, ChangeNameForm, ChangePwdForm
 from ..models.user import get_user_by_name, User
 from ...utils.hider import get_hidden_email, get_hidden_pwd
 from ...utils.mail_utils import send_password_reset_email, send_email_confirmation_mail
 
 
-@chat.errorhandler(404)
+@main.errorhandler(404)
 def handle_404(err):
     """view of `404` page"""
     return render_template('404.html'), 404
 
 
-@chat.route('/')
+@main.route('/')
 def index():
     """view of `game` page"""
     return render_template('index.html')
 
 
-@chat.route('/login', methods=["POST", "GET"])
+@main.route('/login', methods=["POST", "GET"])
 def login():
     """
     view of `login` page
@@ -43,7 +43,7 @@ def login():
     return render_template("profile/login.html", form=form)
 
 
-@chat.route('/reset_password_request', methods=['GET', 'POST'])
+@main.route('/reset_password_request', methods=['GET', 'POST'])
 def reset_password_request():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
@@ -57,7 +57,7 @@ def reset_password_request():
     return render_template('profile/reset_password_request.html', form=form)
 
 
-@chat.route('/registration', methods=["POST", "GET"])
+@main.route('/registration', methods=["POST", "GET"])
 def registration():
     """
     view of `registration` page
@@ -73,7 +73,7 @@ def registration():
     return render_template('profile/registration.html', form=form)
 
 
-@chat.route('/profile_settings')
+@main.route('/profile_settings')
 @login_required
 def profile_settings():
     """view of `profile` page"""
@@ -91,7 +91,7 @@ def profile_settings():
                            pwd_form=pwd_form)
 
 
-@chat.route('/profile_setting_email', methods=["POST"])
+@main.route('/profile_setting_email', methods=["POST"])
 @login_required
 def profile_settings_email():
     email_form = ChangeEmailForm()
@@ -117,7 +117,7 @@ def profile_settings_email():
                            pwd_form=pwd_form)
 
 
-@chat.route('/profile_setting_name', methods=["POST"])
+@main.route('/profile_setting_name', methods=["POST"])
 @login_required
 def profile_settings_name():
     email_form = ChangeEmailForm()
@@ -142,7 +142,7 @@ def profile_settings_name():
                            pwd_form=pwd_form)
 
 
-@chat.route('/profile_setting_pwd', methods=["POST"])
+@main.route('/profile_setting_pwd', methods=["POST"])
 @login_required
 def profile_settings_pwd():
     email_form = ChangeEmailForm()
@@ -167,7 +167,7 @@ def profile_settings_pwd():
                            pwd_form=pwd_form)
 
 
-@chat.route('/confirm_email/<token>', methods=['GET', 'POST'])
+@main.route('/confirm_email/<token>', methods=['GET', 'POST'])
 @login_required
 def confirm_email(token):
     user = User.verify_token(token, 'confirm_email')
@@ -177,7 +177,7 @@ def confirm_email(token):
     return render_template('profile/email_confirmed.html')
 
 
-@chat.route('/reset_password/<token>', methods=['GET', 'POST'])
+@main.route('/reset_password/<token>', methods=['GET', 'POST'])
 def reset_password(token):
     if current_user.is_authenticated:
         return redirect(url_for('index'))
@@ -192,7 +192,7 @@ def reset_password(token):
     return render_template('profile/reset_password.html', form=form)
 
 
-@chat.route("/logout")
+@main.route("/logout")
 @login_required
 def logout():
     """
