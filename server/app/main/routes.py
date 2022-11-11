@@ -67,7 +67,7 @@ def registration():
     form = RegistrationForm()
     if form.validate_on_submit():
         user = User(form.username.data, form.user_email.data, form.pwd.data)
-        send_email_confirmation_mail(user)
+        # send_email_confirmation_mail(user) # todo
         flash('Проверьте вашу почту и следуйте инструкциям для её подтверждения', 'info')
         return redirect(url_for('main.login'))
     return render_template('profile/registration.html', form=form)
