@@ -59,10 +59,6 @@
     cursor: pointer;
 }
 
-#rightside-pannel {
-    overflow: hidden; /* Make this div take up the rest of the horizontal space, and no more */
-}
-
 #display-message-section {
     margin-top: 5em;
     min-height: 82vh;

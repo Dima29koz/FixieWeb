@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Connect to websocket
     let socket = io('/chat');
-    console.log(socket)
 
     // Retrieve username
     const username = document.querySelector('#get-username').innerHTML;
@@ -77,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Select a room
     document.querySelectorAll('.select-room').forEach(p => {
         p.onclick = () => {
-            let newRoom = p.innerHTML
+            let newRoom = p.id;
             // Check if user already in the room
             if (newRoom === room) {
                 msg = `You are already in ${room} room.`;
