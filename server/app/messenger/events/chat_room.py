@@ -1,18 +1,21 @@
 import time
 
+from flask_login import current_user
 from flask_socketio import Namespace, send, join_room, leave_room
+
+from server.app.messenger.models import Message, Chat
 
 
 class ChatNamespace(Namespace):
     @staticmethod
-    def on_message(data):
+    def on_message(data: dict):
         """Broadcast messages"""
 
-        msg = data["msg"]
-        username = data["username"]
-        room = data["room"]
-        time_stamp = time.strftime('%b-%d %I:%M%p', time.localtime())
-        send({"username": username, "msg": msg, "time_stamp": time_stamp}, room=room)
+        msg_text = data.get("msg")
+        room_id = data.get("room")
+        msg = Message(current_user.id, room_id, msg_text)
+        # send(msg.to_dict(), room=room_id)
+        send({"username": current_user.user_name, "msg": msg_text, "time_stamp": '123'}, room=room_id)
 
     @staticmethod
     def on_join(data):

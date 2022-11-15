@@ -12,4 +12,5 @@ ROOMS = ["lounge", "news", "games", "coding"]
 @login_required
 @allowed_roles(roles={'Admin', 'Member'})
 def chat():
+    # return render_template("chat.html", username=current_user.user_name, rooms=current_user.chats)
     return render_template("chat.html", username=current_user.user_name, rooms=ROOMS)

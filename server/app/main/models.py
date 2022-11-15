@@ -52,6 +52,7 @@ class User(db.Model, UserMixin):
     pwd = db.Column(db.String(256), nullable=False)
     date = db.Column(db.DateTime, default=datetime.utcnow)
     roles = db.relationship('Role', secondary='user_roles', backref=db.backref('users', lazy=True))
+    chats = db.relationship('Chat', secondary='user_chats', backref=db.backref('chats', lazy=True))
 
     def __repr__(self):
         return '<User %r>' % self.id
@@ -69,7 +70,9 @@ class User(db.Model, UserMixin):
 
     def add(self):
         """added user to DB"""
+        member = Role.query.filter_by(name='Member').first()
         try:
+            self.roles.append(member)
             db.session.add(self)
             db.session.commit()
         except Exception as e:
@@ -115,6 +118,15 @@ def get_user_by_id(user_id: int) -> User | None:
 def get_user_by_name(user_name: str) -> User | None:
     """returns user by user_name if user exists"""
     return User.query.filter_by(user_name=user_name).first()
+
+
+def get_users_by_role(role_name: str = 'Member') -> list[User]:
+    return User.query.join(User.roles).filter(Role.name == role_name).all()
+
+
+def get_users():
+    admin = Role.query.filter_by(name='Admin').first()
+    return admin.users
 
 
 class Role(db.Model):

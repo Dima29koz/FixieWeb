@@ -1,20 +1,94 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const username = document.getElementById('get-user-name').innerHTML;
+    const input = document.querySelector('#user-search');
+    const suggestions = document.querySelector('.suggestions ul');
 
-    // Connect to websocket
+    input.addEventListener('keyup', searchHandler);
+    suggestions.addEventListener('click', useSuggestion);
+
     let socket = io('/chat');
 
-    // Retrieve username
-    const username = document.querySelector('#get-username').innerHTML;
-
     // Set default room
-    let room = "Lounge"
-    joinRoom("Lounge");
+    let room = null;
+
+
+    let users = [];
+    fetch(`./api/users_to_chat`)
+        .then(response => response.json())
+        .then(users_json => {
+            users = users_json.users;
+        });
+
+    function search(str) {
+        let results = [];
+        const val = str.toLowerCase();
+
+        for (let i = 0; i < users.length; i++) {
+            if (users[i].name.toLowerCase().indexOf(val) > -1) {
+                results.push(users[i]);
+            }
+        }
+        return results;
+    }
+
+    function searchHandler(e) {
+        const inputVal = e.currentTarget.value;
+        let results = [];
+        if (inputVal.length > 0) {
+            results = search(inputVal);
+        }
+        showSuggestions(results, inputVal);
+    }
+
+    function showSuggestions(results, inputVal) {
+        suggestions.innerHTML = '';
+
+        if (results.length > 0) {
+            for (let i = 0; i < results.length; i++) {
+                let user_name = results[i].name;
+                let li_new = document.createElement('div');
+                li_new.className = 'list-group-item list-group-item-action';
+                li_new.innerHTML = `${user_name}`;
+                suggestions.append(li_new);
+            }
+
+        } else {
+            suggestions.innerHTML = '';
+        }
+    }
+
+    function useSuggestion(e) {
+        let new_room = e.target.innerHTML;
+        suggestions.innerHTML = '';
+        input.value = '';
+        create_room(new_room);
+        check_room(new_room);
+    }
+
+    function create_room(new_room) {
+        const rooms = document.getElementById('rooms');
+        let container = document.createElement('div');
+
+        container.className = 'select-room list-group-item list-group-item-action py-3 lh-sm';
+        container.role = 'button';
+        container.id = new_room;
+        let inner_div = document.createElement('div');
+        inner_div.className = 'd-flex w-100 align-items-center justify-content-between';
+        inner_div.innerHTML =`<strong className="mb-1">${new_room}</strong><small>timestamp</small>`;
+        container.append(inner_div);
+        container.onclick = () => {
+            check_room(new_room);
+        };
+        rooms.prepend(container);
+    }
 
     // Send messages
-    document.querySelector('#send_message').onclick = () => {
-        socket.emit('message', {'msg': document.querySelector('#user_message').value,
-            'username': username, 'room': room});
-
+    document.getElementById('send_message').onclick = () => {
+        socket.emit('message', {
+            'msg': document.querySelector('#user_message').value,
+            'username': username,
+            'room': room
+        });
         document.querySelector('#user_message').value = '';
     };
 
@@ -28,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const span_timestamp = document.createElement('span');
             const br = document.createElement('br')
             // Display user's own message
-            if (data.username == username) {
+            if (data.username === username) {
                     p.setAttribute("class", "my-msg");
 
                     // Username
@@ -74,32 +148,33 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Select a room
-    document.querySelectorAll('.select-room').forEach(p => {
-        p.onclick = () => {
-            let newRoom = p.id;
+    document.querySelectorAll('.select-room').forEach(elem => {
+        elem.onclick = () => {
+            let newRoom = elem.id;
             // Check if user already in the room
-            if (newRoom === room) {
-                msg = `You are already in ${room} room.`;
-                printSysMsg(msg);
-            } else {
-                leaveRoom(room);
-                joinRoom(newRoom);
-                room = newRoom;
-            }
+            check_room(newRoom);
         };
     });
 
-    // Logout from chat
-    document.querySelector("#logout-btn").onclick = () => {
-        leaveRoom(room);
-    };
+    function check_room(new_room) {
+        if (new_room === room) {
+            let msg = `You are already in ${room} room.`;
+            printSysMsg(msg);
+        } else {
+            if (room) {
+                leaveRoom(room);
+            }
+            joinRoom(new_room);
+            room = new_room;
+        }
+    }
 
     // Trigger 'leave' event if user was previously on a room
     function leaveRoom(room) {
         socket.emit('leave', {'username': username, 'room': room});
 
-        document.querySelectorAll('.select-room').forEach(p => {
-            p.style.color = "black";
+        document.querySelectorAll('.select-room').forEach(elem => {
+            elem.classList.remove('active');
         });
     }
 
@@ -108,11 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Join room
         socket.emit('join', {'username': username, 'room': room});
-
-        // Highlight selected room
-        document.querySelector('#' + CSS.escape(room)).style.color = "#ffc107";
-        document.querySelector('#' + CSS.escape(room)).style.backgroundColor = "white";
-
+        document.querySelector('#' + CSS.escape(room)).classList.add('active');
         // Clear message area
         document.querySelector('#display-message-section').innerHTML = '';
 
