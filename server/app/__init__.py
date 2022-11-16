@@ -38,6 +38,12 @@ def create_app(config) -> Flask:
     app.register_blueprint(messenger_blueprint)
     app.register_blueprint(api_blueprint)
 
+    from .admin import create_admin
+    from .admin.configure import configure_admin
+    with app.app_context():
+        admin = create_admin(app=app)
+        configure_admin(app, admin)
+
     sio.init_app(app, logger=config.LOGGER, manage_session=config.MANAGE_SESSION)
 
     return app

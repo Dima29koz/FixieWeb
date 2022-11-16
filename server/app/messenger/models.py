@@ -57,7 +57,6 @@ class Message(db.Model):
     chat_id = db.Column(db.Integer, db.ForeignKey('chat.id'), nullable=False)
 
     sender = db.relationship("User", foreign_keys=[sender_id])
-    chat = db.relationship("Chat", foreign_keys=[chat_id])
 
     def add(self):
         """added message to DB"""

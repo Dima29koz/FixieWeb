@@ -46,8 +46,8 @@ class User(db.Model, UserMixin):
 
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
-    user_name = db.Column(db.String(50), unique=True)
-    user_email = db.Column(db.String(50))
+    user_name = db.Column(db.String(50), unique=True, nullable=False)
+    user_email = db.Column(db.String(50), nullable=False)
     is_email_verified = db.Column(db.Boolean, default=False)
     pwd = db.Column(db.String(256), nullable=False)
     date = db.Column(db.DateTime, default=datetime.utcnow)
@@ -145,3 +145,6 @@ class Role(db.Model):
         except Exception as e:
             print(e)
             db.session.rollback()
+
+    def __repr__(self):
+        return self.name
