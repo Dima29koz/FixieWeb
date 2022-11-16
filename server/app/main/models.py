@@ -52,7 +52,7 @@ class User(db.Model, UserMixin):
     pwd = db.Column(db.String(256), nullable=False)
     date = db.Column(db.DateTime, default=datetime.utcnow)
     roles = db.relationship('Role', secondary='user_roles', backref=db.backref('users', lazy=True))
-    chats = db.relationship('Chat', secondary='user_chats', backref=db.backref('chats', lazy=True))
+    chats = db.relationship('Chat', secondary='user_chats', backref=db.backref('users', lazy=True))
 
     def __repr__(self):
         return '<User %r>' % self.id
@@ -130,6 +130,18 @@ def get_users():
 
 
 class Role(db.Model):
+    def __init__(self, name):
+        self.name = name
+        self.add()
+
     __tablename__ = 'roles'
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(50), unique=True)
+
+    def add(self):
+        try:
+            db.session.add(self)
+            db.session.commit()
+        except Exception as e:
+            print(e)
+            db.session.rollback()

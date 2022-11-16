@@ -5,10 +5,9 @@
 {% endblock %}
 
 {% block script %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
-    <script src="{{ url_for('static', filename='scripts/chat_page.js') }}"></script>
-    <script src="{{ url_for('static', filename='scripts/socketio.js') }}"></script>
-<!--    <script src="{{ url_for('static', filename='scripts/autocomplete.js') }}"></script>-->
+    <script type="text/javascript" src="{{ url_for('static', filename='scripts/lib/socket_io.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='scripts/chat_page_utils.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='scripts/chat_page.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/chat_style.css')}}">
 {% endblock %}
 
@@ -34,9 +33,9 @@
 
             <div id="rooms">
                 {% for room in rooms %}
-                <div id="{{ room|title }}" class="select-room list-group-item list-group-item-action py-3 lh-sm" role="button">
+                <div id="{{ room.id }}" class="select-room list-group-item list-group-item-action py-3 lh-sm" role="button">
                     <div class="d-flex w-100 align-items-center justify-content-between">
-                        <strong class="mb-1">{{ room|title }}</strong>
+                        <strong class="recipient_name mb-1">{{ room.get_name()|title }}</strong>
                         <small>timestamp</small>
                     </div>
                     <div class="col-10 mb-1 small">Message text here.</div>

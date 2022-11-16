@@ -4,7 +4,8 @@ from flask import send_file, jsonify
 from flask_login import login_required, current_user
 
 from . import api
-from ..main.models import get_users_by_role, get_users
+from ..main.models import get_users_by_role, get_users, get_user_by_name
+from ..messenger.models import get_chat_by_recipient, Chat
 from ...utils.role_required import allowed_roles
 
 
@@ -25,4 +26,18 @@ def get_allowed_to_chat_users():
     users = get_users_by_role(role)
     return jsonify(
         users=[{'id': user.id, 'name': user.user_name} for user in users],
+    )
+
+
+@api.route('/api/create_chat/<recipient_name>')
+@login_required
+@allowed_roles(roles={'Admin', 'Member'})
+def get_created_chat(recipient_name: str):
+    chat = get_chat_by_recipient(recipient_name)
+    if not chat:
+        chat = Chat(users=[current_user, get_user_by_name(recipient_name)])
+    return jsonify(
+        id=chat.id,
+        name=chat.get_name(),
+        members=[{'id': user.id, 'name': user.user_name} for user in chat.users],
     )
