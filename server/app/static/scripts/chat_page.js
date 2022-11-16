@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const suggestions = document.querySelector('.suggestions ul');
 
     let room_id = null;
+    let room_name = '';
     let allowed_users = [];
     fetch(`./api/users_to_chat`)
         .then(response => response.json())
@@ -84,6 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 let new_room_id = chat.id;
                 let new_room = chat.name;
 
+                room_name = new_room;
                 if (document.getElementById(new_room_id)) {
                     check_room(new_room_id);
                     return;
@@ -120,6 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.select-room').forEach(elem => {
         elem.onclick = () => {
             let new_room_id = elem.id;
+            room_name = elem.querySelector('.recipient_name').innerHTML;
             check_room(new_room_id);
         };
     });
@@ -141,7 +144,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Trigger 'leave' event if user was previously on a room
     function leaveRoom(room_id) {
         socket.emit('leave', {'username': username, 'room_id': room_id});
-
+        const chat_title = document.querySelector('#chat-title');
+        chat_title.innerHTML = '';
         document.querySelectorAll('.select-room').forEach(elem => {
             elem.classList.remove('active');
         });
@@ -152,6 +156,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Join room
         socket.emit('join', {'username': username, 'room_id': new_room_id});
         document.querySelector('#' + CSS.escape(new_room_id)).classList.add('active');
+        let chat_title = document.querySelector('#chat-title');
+        chat_title.innerHTML = room_name;
         // Clear message area
         document.querySelector('#display-message-section').innerHTML = '';
 

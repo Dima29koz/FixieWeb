@@ -1,3 +1,24 @@
+.my-msg {
+    margin-left:7em;
+    margin-right:1em;
+    padding: 0.5em 0.5em 0.5em 1em;
+    border-radius: 5px;
+    border-color: #206ED2;
+    border-width: 1px;
+    border-style: solid;
+    /* animation */
+    animation-name: fadeIn;
+    animation-duration: 0.75s;
+    animation-fill-mode: forwards;
+    animation-timing-function: ease-in-out;
+}
+
+.msg {
+    padding: 0.5em 0.5em 0.5em 1em;
+    border-radius: .5em;
+    border-width: 1px;
+    border-style: solid;
+}
 
 .others-msg {
     margin-right:7em;
@@ -8,21 +29,6 @@
     border-width: 0.5px;
     border-style: solid;
     background-color: #C2DBFB;
-    /* animation */
-    animation-name: fadeIn;
-    animation-duration: 0.75s;
-    animation-fill-mode: forwards;
-    animation-timing-function: ease-in-out;
-}
-
-.my-msg {
-    margin-left:7em;
-    margin-right:1em;
-    padding: 0.5em 0.5em 0.5em 1em;
-    border-radius: 5px;
-    border-color: #206ED2;
-    border-width: 1px;
-    border-style: solid;
     /* animation */
     animation-name: fadeIn;
     animation-duration: 0.75s;

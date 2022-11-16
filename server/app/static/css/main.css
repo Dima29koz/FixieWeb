@@ -45,23 +45,6 @@
     color: green;
 }
 
-.others-msg {
-    border-color: grey;
-    background-color: #C2DBFB;
-}
-
-.msg {
-    padding: 0.5em 0.5em 0.5em 1em;
-    border-radius: .5em;
-    border-width: 1px;
-    border-style: solid;
-}
-
-.my-msg {
-    border-color: #206ED2;
-    border-style: solid;
-}
-
 .system-msg {
     margin-right:7em;
     margin-left: 1em;
@@ -83,8 +66,8 @@
 }
 
 .chat {
-    min-height: 85vh;
-    max-height: 85vh;
+    min-height: 84vh;
+    max-height: 84vh;
 }
 
 .cropped {

@@ -58,8 +58,11 @@ function createSysMsg(msg) {
  * @param {string} current_user
  * **/
 function createMsg(message, current_user) {
+    const div = document.createElement('div');
+    div.className = "d-flex flex-row";
     const p = document.createElement('p');
-    const span_username = document.createElement('span');
+    p.className = "msg text-break";
+    // const span_username = document.createElement('span');
     const span_timestamp = document.createElement('span');
     const br = document.createElement('br')
 
@@ -69,23 +72,27 @@ function createMsg(message, current_user) {
     }
     // Display user's own message
     if (message.username === current_user) {
-        p.setAttribute("class", "my-msg");
-        span_username.setAttribute("class", "my-username");
+        div.classList.add('justify-content-end');
+        p.classList.add("my-msg");
+        // span_username.setAttribute("class", "my-username");
     }
     // Display other users' messages
     else {
-        p.setAttribute("class", "others-msg");
-        span_username.setAttribute("class", "other-username");
+        div.classList.add('justify-content-start');
+        p.classList.add("others-msg");
+        // span_username.setAttribute("class", "other-username");
     }
 
-    span_username.innerText = message.username;
+    // span_username.innerText = message.username;
 
-    span_timestamp.setAttribute("class", "timestamp");
+    span_timestamp.className ="timestamp d-flex justify-content-end";
 
     span_timestamp.innerText = convert_time(message.timestamp);
 
-    p.innerHTML += span_username.outerHTML + br.outerHTML + message.msg + br.outerHTML + span_timestamp.outerHTML
-    return p;
+    // p.innerHTML += span_username.outerHTML + br.outerHTML + message.msg + br.outerHTML + span_timestamp.outerHTML
+    p.innerHTML += message.msg + span_timestamp.outerHTML
+    div.append(p);
+    return div;
 }
 
 function convert_time(timestamp) {
