@@ -38,11 +38,13 @@ def create_app(config) -> Flask:
     app.register_blueprint(messenger_blueprint)
     app.register_blueprint(api_blueprint)
 
-    from .admin import create_admin
-    from .admin.configure import configure_admin
+    from .admin import create_admin, create_model_viewer
+    from .admin.configure import configure_admin, configure_model_viewer
     with app.app_context():
         admin = create_admin(app=app)
         configure_admin(app, admin)
+        model_viewer = create_model_viewer(app=app, config=config)
+        configure_model_viewer(app, model_viewer)
 
     sio.init_app(app, logger=config.LOGGER, manage_session=config.MANAGE_SESSION)
 

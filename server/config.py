@@ -21,6 +21,7 @@ class BaseConfig:
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_DEFAULT_SENDER = os.environ.get('MAIL_DEFAULT_SENDER')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
+    BASE_TEMPLATE = 'model_view/base.html'
 
 
 class DevelopmentConfig(BaseConfig):
