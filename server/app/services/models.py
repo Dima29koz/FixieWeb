@@ -31,8 +31,9 @@ class Service(db.Model):
         secondary='service_relations',
         primaryjoin=id == service_relations.c.related_service_id,
         secondaryjoin=id == service_relations.c.main_service_id,
-        backref=db.backref('related_services'),
-        lazy=True)
+        backref=db.backref('related_services', lazy=True),
+        lazy=True,
+    )
 
     def add(self):
         """added message to DB"""
@@ -47,7 +48,8 @@ class Service(db.Model):
         return {
             'name': self.name,
             'description': self.description,
-            'timestamp': f'{self.timestamp.isoformat()}Z',
+            'created': f'{self.created.isoformat()}Z',
+            'modified': f'{self.modified.isoformat()}Z',
         }
 
     def __repr__(self):

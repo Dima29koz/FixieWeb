@@ -1,16 +1,13 @@
 .form-signin {
-  width: 100%;
-  max-width: 330px;
-  padding: 15px;
-  margin: auto;
+    width: 100%;
+    max-width: 330px;
+    padding: 15px;
+    margin: auto;
 }
 
 .err {
     color: red
 }
-
-.invalid-feedback {}
-
 
 .errors, .flash-error {
     list-style: none;
@@ -46,11 +43,11 @@
 }
 
 .system-msg {
-    margin-right:7em;
+    margin-right: 7em;
     margin-left: 1em;
     padding: 0.5em 0.5em 0.5em 1em;
     color: #656d78;
-    font-size:0.9em;
+    font-size: 0.9em;
 }
 
 .other-username {
@@ -76,15 +73,15 @@
 }
 
 .bd-aside a {
-  padding: .1875rem .5rem;
-  margin-top: .125rem;
-  margin-left: .3125rem;
-  color: rgba(0, 0, 0, .65);
-  text-decoration: none;
+    padding: .1875rem .5rem;
+    margin-top: .125rem;
+    margin-left: .3125rem;
+    color: rgba(0, 0, 0, .65);
+    text-decoration: none;
 }
 
 .bd-aside a:hover,
 .bd-aside a:focus {
-  color: rgba(0, 0, 0, .85);
-  background-color: rgba(121, 82, 179, .1);
+    color: rgba(0, 0, 0, .85);
+    background-color: rgba(121, 82, 179, .1);
 }
