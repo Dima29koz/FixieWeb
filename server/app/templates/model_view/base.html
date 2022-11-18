@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% import 'admin/layout.html' as layout with context -%}
+{% import 'model_view/utils.html' as layout with context %}
 {% import 'admin/static.html' as admin_static with context %}
 
 {% block title %}
@@ -7,22 +7,22 @@
 {% endblock %}
 
 {% block script %}
-  {% block head_css %}
-      <link href="{{ admin_static.url(filename='admin/css/bootstrap4/admin.css', v='1.1.1') }}" rel="stylesheet">
-      <link href="{{ admin_static.url(filename='bootstrap/bootstrap4/css/font-awesome.min.css', v='4.7.0') }}" rel="stylesheet">
-      {% if admin_view.extra_css %}
-        {% for css_url in admin_view.extra_css %}
-          <link href="{{ css_url }}" rel="stylesheet">
-        {% endfor %}
-      {% endif %}
-      <style>
-          .hide {
-              display: none;
-          }
-      </style>
-  {% endblock %}
-  {% block head %}{% endblock %}
-  {% block head_tail %}{% endblock %}
+    {% block head_css %}
+        <link href="{{ admin_static.url(filename='admin/css/bootstrap4/admin.css', v='1.1.1') }}" rel="stylesheet">
+        <link href="{{ admin_static.url(filename='bootstrap/bootstrap4/css/font-awesome.min.css', v='4.7.0') }}" rel="stylesheet">
+        {% if admin_view.extra_css %}
+            {% for css_url in admin_view.extra_css %}
+                <link href="{{ css_url }}" rel="stylesheet">
+            {% endfor %}
+        {% endif %}
+        <style>
+            .hide {
+                display: none;
+            }
+        </style>
+    {% endblock %}
+    {% block head %}{% endblock %}
+    {% block head_tail %}{% endblock %}
 {% endblock %}
 
 {% block main %}

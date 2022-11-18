@@ -1,0 +1,26 @@
+{% import 'admin/layout.html' as layout with context -%}
+
+{% macro messages() %}
+  {% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+      {% for category, m in messages %}
+        {% if category %}
+          {# alert-error changed to alert-danger in bootstrap 3, mapping is for backwards compatibility #}
+          {% set mapping = {'message': 'info', 'error': 'danger'} %}
+          <div class="toast align-items-center bg-{{ mapping.get(category, category) }} bg-opacity-25 fade show" role="alert" aria-live="assertive" aria-atomic="true">
+        {% else %}
+          <div class="toast align-items-center fade show" role="alert" aria-live="assertive" aria-atomic="true">
+        {% endif %}
+          <div class="d-flex">
+              <div class="toast-body">
+                  {{ m }}
+              </div>
+              <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  {% endwith %}
+{% endmacro %}
