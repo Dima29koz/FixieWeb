@@ -22,6 +22,7 @@ class BaseConfig:
     MAIL_DEFAULT_SENDER = os.environ.get('MAIL_DEFAULT_SENDER')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     BASE_TEMPLATE = 'model_view/base.html'
+    BASE_INCIDENTS_TEMPLATE = 'incidents/base.html'
 
 
 class DevelopmentConfig(BaseConfig):

@@ -55,7 +55,7 @@ class User(db.Model, UserMixin):
     chats = db.relationship('Chat', secondary='user_chats', backref=db.backref('users', lazy=True))
 
     def __repr__(self):
-        return '<User %r>' % self.id
+        return self.user_name
 
     def check_password(self, password: str):
         """
