@@ -19,6 +19,6 @@ def configure_model_viewer(app, model_viewer):
 
 def configure_incidents_viewer(app, incidents_viewer):
     incidents_viewer.add_view(MyIncidentModelView(
-        Incident, db.session, name='Инциденты', url='my', endpoint='my'))
+        Incident, db.session, name='Исходящие', url='my', endpoint='my'))
     incidents_viewer.add_view(ResponsibleIncidentModelView(
-        Incident, db.session, name='Услуги', url='in_responsibility', endpoint='in_responsibility'))
+        Incident, db.session, name='В ответственности', url='in_responsibility', endpoint='in_responsibility'))

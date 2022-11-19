@@ -14,6 +14,6 @@ def create_model_viewer(app=None, config=None):
 
 def create_incidents_viewer(app=None, config=None):
     return Admin(
-        app, name='incidents_viewer',
+        app, name='Инциденты',
         url='/incidents', endpoint='incidents_viewer',
         base_template=config.BASE_INCIDENTS_TEMPLATE, template_mode='bootstrap4')

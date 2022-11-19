@@ -7,10 +7,8 @@ from wtforms import IntegerRangeField
 from sqlalchemy import func
 
 
-class MyIncidentModelView(sqla.ModelView):
-    can_create = True
-    can_edit = True
-    can_delete = True
+class IncidentModelView(sqla.ModelView):
+    can_delete = False
     can_set_page_size = True
     can_view_details = True
 
@@ -36,7 +34,6 @@ class MyIncidentModelView(sqla.ModelView):
     )
 
     column_display_pk = True
-    column_list = ['created', 'id', 'status', 'type', 'responsible_employee', 'subject', 'description']
     column_labels = dict(
         id='ID',
         subject='Тема',
@@ -51,12 +48,6 @@ class MyIncidentModelView(sqla.ModelView):
         modified='Дата изменения',
     )
 
-    def is_accessible(self):
-        try:
-            return 'Member' in [role.name for role in current_user.roles]
-        except AttributeError:
-            return False
-
     def inaccessible_callback(self, name, **kwargs):
         return redirect(url_for('main.login', next=request.args.get("next")))
 
@@ -66,12 +57,40 @@ class MyIncidentModelView(sqla.ModelView):
         else:
             model.modified = datetime.utcnow()
 
+
+class MyIncidentModelView(IncidentModelView):
+    can_create = True
+    can_edit = False
+    column_list = ['created', 'id', 'status', 'type', 'responsible_employee', 'subject', 'description']
+    form_excluded_columns = ['status', 'responsible_employee', 'creator', 'priority', 'criticality']
+
     def get_query(self):
         return self.session.query(self.model).filter(self.model.creator_id == current_user.id)
 
     def get_count_query(self):
         return self.session.query(func.count('*')).filter(self.model.creator_id == current_user.id)
 
+    def is_accessible(self):
+        try:
+            return 'Member' in [role.name for role in current_user.roles]
+        except AttributeError:
+            return False
 
-class ResponsibleIncidentModelView(MyIncidentModelView):
-    pass
+
+class ResponsibleIncidentModelView(IncidentModelView):
+    can_create = False
+    can_edit = True
+    column_list = ['created', 'id', 'status', 'type', 'subject', 'priority', 'criticality', 'creator']
+    form_excluded_columns = ['responsible_employee', 'creator']
+
+    def get_query(self):
+        return self.session.query(self.model).filter(self.model.responsible_employee_id == current_user.id)
+
+    def get_count_query(self):
+        return self.session.query(func.count('*')).filter(self.model.responsible_employee_id == current_user.id)
+
+    def is_accessible(self):
+        try:
+            return 'Admin' in [role.name for role in current_user.roles]
+        except AttributeError:
+            return False
