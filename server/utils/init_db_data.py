@@ -50,10 +50,12 @@ def create_admin():
         )
         user.is_email_verified = True
         user.roles.append(Role.query.filter_by(name='Admin').first())
+        user.roles.append(Role.query.filter_by(name='Employee').first())
         user.add()
 
 
 def create_users():
+    employee = Role.query.filter_by(name='Employee').first()
     for i in range(20):
         if not get_user_by_name(f'user{i}'):
             user = User(
@@ -62,9 +64,10 @@ def create_users():
                 pwd='user',
             )
             user.is_email_verified = True
+            user.roles.append(employee)
             user.add()
+    support = Role.query.filter_by(name='Support').first()
     for i in range(5):
-        support = Role.query.filter_by(name='Support').first()
         if not get_user_by_name(f'support{i}'):
             user = User(
                 user_name=f'support{i}',
