@@ -10,10 +10,10 @@ class Incident(db.Model):
     description = db.Column(db.Text(), nullable=False)
     priority = db.Column(db.Integer(), default=1)
     criticality = db.Column(db.Integer(), default=1)
-    status_id = db.Column(db.Integer, db.ForeignKey('request_statuses.id'), nullable=False)
+    status_id = db.Column(db.Integer, db.ForeignKey('request_statuses.id'), nullable=False, default=1)
     type_id = db.Column(db.Integer, db.ForeignKey('request_types.id'), nullable=False)
     creator_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    responsible_employee_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    responsible_employee_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False, default=1)
     created = db.Column(db.DateTime, default=datetime.utcnow)
     modified = db.Column(db.DateTime, default=datetime.utcnow)
 

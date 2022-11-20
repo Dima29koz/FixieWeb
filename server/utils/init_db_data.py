@@ -63,3 +63,14 @@ def create_users():
             )
             user.is_email_verified = True
             user.add()
+    for i in range(5):
+        support = Role.query.filter_by(name='Support').first()
+        if not get_user_by_name(f'support{i}'):
+            user = User(
+                user_name=f'support{i}',
+                user_email='dima29koz@yandex.ru',
+                pwd='user',
+            )
+            user.is_email_verified = True
+            user.roles.append(support)
+            user.add()

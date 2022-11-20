@@ -1,10 +1,14 @@
 from datetime import datetime
+from random import choice
 
 from flask import redirect, url_for, request
 from flask_admin.contrib import sqla
 from flask_login import current_user
 from wtforms import IntegerRangeField
 from sqlalchemy import func
+
+from server.app.incident_management.models import RequestStatus
+from server.app.main.models import get_users_by_role
 
 
 class IncidentModelView(sqla.ModelView):
@@ -54,6 +58,8 @@ class IncidentModelView(sqla.ModelView):
     def on_model_change(self, form, model, is_created):
         if is_created:
             model.creator = current_user
+            model.status = RequestStatus.query.filter_by(name='Открыта').first()
+            model.responsible_employee = choice(get_users_by_role('Support'))
         else:
             model.modified = datetime.utcnow()
 
@@ -72,7 +78,7 @@ class MyIncidentModelView(IncidentModelView):
 
     def is_accessible(self):
         try:
-            return 'Member' in [role.name for role in current_user.roles]
+            return current_user.has_at_least_one_of_roles('Member')
         except AttributeError:
             return False
 
@@ -82,6 +88,10 @@ class ResponsibleIncidentModelView(IncidentModelView):
     can_edit = True
     column_list = ['created', 'id', 'status', 'type', 'subject', 'priority', 'criticality', 'creator']
     form_excluded_columns = ['responsible_employee', 'creator']
+    form_widget_args = IncidentModelView.form_widget_args | dict(
+        subject={'readonly': True},
+        description={'readonly': True},
+    )
 
     def get_query(self):
         return self.session.query(self.model).filter(self.model.responsible_employee_id == current_user.id)
@@ -91,6 +101,20 @@ class ResponsibleIncidentModelView(IncidentModelView):
 
     def is_accessible(self):
         try:
-            return 'Admin' in [role.name for role in current_user.roles]
+            return current_user.has_at_least_one_of_roles('Admin', 'Support')
+        except AttributeError:
+            return False
+
+
+class AllIncidentModelView(IncidentModelView):
+    can_create = False
+    can_edit = True
+    can_delete = True
+    column_list = [
+        'created', 'id', 'status', 'type', 'responsible_employee', 'subject', 'priority', 'criticality', 'creator']
+
+    def is_accessible(self):
+        try:
+            return current_user.has_at_least_one_of_roles('Admin')
         except AttributeError:
             return False

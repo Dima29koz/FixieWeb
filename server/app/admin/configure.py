@@ -1,6 +1,6 @@
 from .views import AdminModelView, MainIndexLink
 from ..incident_management.models import Incident
-from ..incident_management.views import MyIncidentModelView, ResponsibleIncidentModelView
+from ..incident_management.views import MyIncidentModelView, ResponsibleIncidentModelView, AllIncidentModelView
 from ..services.views import ServiceModelView
 from server.app import db
 from server.app.main.models import User
@@ -22,3 +22,5 @@ def configure_incidents_viewer(app, incidents_viewer):
         Incident, db.session, name='Исходящие', url='my', endpoint='my'))
     incidents_viewer.add_view(ResponsibleIncidentModelView(
         Incident, db.session, name='В ответственности', url='in_responsibility', endpoint='in_responsibility'))
+    incidents_viewer.add_view(AllIncidentModelView(
+        Incident, db.session, name='Все заявки', url='all_incidents', endpoint='all_incidents'))
