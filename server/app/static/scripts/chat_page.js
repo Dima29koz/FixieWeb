@@ -2,10 +2,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const username = document.getElementById('get-user-name').innerHTML;
     const input = document.querySelector('#user-search');
     const suggestions = document.querySelector('.suggestions ul');
+    const rooms = document.querySelector('#rooms')
 
     let room_id = null;
     let room_name = '';
     let allowed_users = [];
+
     fetch(`./api/users_to_chat`)
         .then(response => response.json())
         .then(/**
@@ -13,6 +15,15 @@ document.addEventListener('DOMContentLoaded', () => {
          * @property users_json.users
          **/users_json => {
             allowed_users = users_json.users;
+        });
+
+    fetch(`./api/user_chats`)
+        .then(response => response.json())
+        .then(/**
+         * @property user_chats_json
+         * @property users_json.chats
+         **/user_chats_json => {
+            show_chats(user_chats_json.chats);
         });
 
     input.addEventListener('keyup', searchHandler);
@@ -24,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Display current message
         displayMsg(data);
         scrollDownChatWindow();
+        updateChats(data);
     });
 
     socket.on('load_messages', data => {
@@ -32,10 +44,33 @@ document.addEventListener('DOMContentLoaded', () => {
          * @property data.messages
          * **/
         for (let msg of data.messages) {
-            displayMsg(msg)
+            displayMsg(msg);
         }
         scrollDownChatWindow();
     });
+
+    /**
+     * @param {Array.<{id: Number, name: String, last_msg: {timestamp: String, text: String}}>} chats
+     **/
+    function show_chats(chats) {
+        for (let chat of chats) {
+            let elem = create_chat_container(chat.id, chat.name, chat.last_msg.timestamp, chat.last_msg.text);
+            elem.onclick = () => {
+                check_room(chat.id);
+            };
+            rooms.append(elem);
+        }
+    }
+
+    function updateChats(data) {
+        const chat = document.getElementById(`${data.chat_id}`);
+        let msg_text = chat.querySelector('.small');
+        msg_text.innerHTML = data.msg;
+        let timestamp = chat.querySelector('div > small');
+        timestamp.innerHTML = convert_time(data.timestamp);
+        chat.remove();
+        rooms.prepend(chat);
+    }
 
     function searchHandler(e) {
         const inputVal = e.currentTarget.value;
@@ -90,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     check_room(new_room_id);
                     return;
                 }
-                let container = create_room_container(new_room_id, new_room)
+                let container = create_chat_container(new_room_id, new_room)
                 container.onclick = () => {
                     check_room(new_room_id);
                 };

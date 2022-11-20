@@ -109,6 +109,9 @@ class User(db.Model, UserMixin):
             return
         return get_user_by_id(user_id)
 
+    def has_at_least_one_of_roles(self, *roles):
+        return bool({r.name for r in self.roles}.intersection(set(roles)))
+
 
 def get_user_by_id(user_id: int) -> User | None:
     """returns user by id if user exists"""

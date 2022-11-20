@@ -20,7 +20,7 @@ def get_user_avatar(user_name):
 
 @api.route('/api/users_to_chat')
 @login_required
-@allowed_roles(roles={'Admin', 'Member'})
+@allowed_roles(roles={'Admin', 'Employee', 'Support'})
 def get_allowed_to_chat_users():
     role = 'Admin' if 'Admin' not in [role.name for role in current_user.roles] else 'Member'
     users = get_users_by_role(role)
@@ -29,9 +29,19 @@ def get_allowed_to_chat_users():
     )
 
 
+@api.route('/api/user_chats')
+@login_required
+@allowed_roles(roles={'Admin', 'Employee', 'Support'})
+def get_user_chats():
+    chats = [chat.to_dict() for chat in current_user.chats if chat.messages]
+    return jsonify(
+        chats=sorted(chats, key=lambda chat: chat.get('last_msg').get('timestamp'), reverse=True),
+    )
+
+
 @api.route('/api/create_chat/<recipient_name>')
 @login_required
-@allowed_roles(roles={'Admin', 'Member'})
+@allowed_roles(roles={'Admin', 'Employee', 'Support'})
 def get_created_chat(recipient_name: str):
     chat = get_chat_by_recipient(recipient_name)
     if not chat:

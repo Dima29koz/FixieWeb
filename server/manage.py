@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 load_dotenv()
 from server.app import create_app, sio, db
 from server import config
-from server.utils.init_user import (
+from server.utils.init_db_data import (
     create_admin, create_users, create_roles,
     create_request_types, create_request_statuses,)
 

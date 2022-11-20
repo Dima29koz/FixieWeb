@@ -7,23 +7,30 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-function create_room_container(new_room_id, new_room) {
+function create_chat_container(id, name, timestamp = null, last_msg_text = null) {
     let container = document.createElement('div');
 
-    container.id = new_room_id;
+    container.id = id;
     container.className = 'select-room list-group-item list-group-item-action py-3 lh-sm';
     container.role = 'button';
     let inner_div = document.createElement('div');
     inner_div.className = 'd-flex w-100 align-items-center justify-content-between';
     let chat_name_div = document.createElement('strong');
     chat_name_div.className = 'recipient_name mb-1';
-    chat_name_div.innerText = new_room;
+    chat_name_div.innerText = name;
     let chat_timestamp_div = document.createElement('small');
-    chat_name_div.className = 'recipient_name mb-1';
-    chat_timestamp_div.innerText = 'timestamp';
+    if (timestamp) {
+        chat_timestamp_div.innerText = convert_time(timestamp);
+    }
+    let msg_text = document.createElement('div');
+    msg_text.className = "col-10 mb-1 small"
+    if (last_msg_text) {
+        msg_text.innerText = last_msg_text;
+    }
     inner_div.append(chat_name_div);
     inner_div.append(chat_timestamp_div);
     container.append(inner_div);
+    container.append(msg_text);
 
     return container;
 }
@@ -83,24 +90,40 @@ function createMsg(message, current_user) {
         // span_username.setAttribute("class", "other-username");
     }
 
-    // span_username.innerText = message.username;
-
-    span_timestamp.className ="timestamp d-flex justify-content-end";
+    span_timestamp.className = "timestamp d-flex justify-content-end";
 
     span_timestamp.innerText = convert_time(message.timestamp);
 
-    // p.innerHTML += span_username.outerHTML + br.outerHTML + message.msg + br.outerHTML + span_timestamp.outerHTML
-    p.innerHTML += message.msg + span_timestamp.outerHTML
+    p.innerHTML = message.msg + span_timestamp.outerHTML
     div.append(p);
     return div;
 }
 
 function convert_time(timestamp) {
+    if (!timestamp) {
+        return ''
+    }
     let date = new Date(timestamp);
-
-    let options = {
+    let cur_date = new Date();
+    let options_today = {
         hour: 'numeric',
         minute: 'numeric',
     };
-    return date.toLocaleString('ru', options);
+    let options_other = {
+        month: 'short',
+        day: 'numeric',
+    };
+
+    if (isToday(date)) {
+        return date.toLocaleString('ru', options_today);
+    }
+    return date.toLocaleString('ru', options_other);
+
+}
+
+function isToday(someDate) {
+    const today = new Date()
+    return someDate.getDate() === today.getDate() &&
+        someDate.getMonth() === today.getMonth() &&
+        someDate.getFullYear() === today.getFullYear()
 }

@@ -3,7 +3,7 @@ from server.app.incident_management.models import RequestStatus, RequestType
 
 
 def create_roles():
-    roles = ['Admin', 'Member']
+    roles = ['Admin', 'Employee', 'Support', 'Member']
     for role in roles:
         if not Role.query.filter_by(name=role).first():
             Role(name=role)

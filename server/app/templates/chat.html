@@ -31,17 +31,7 @@
                 </div>
             </div>
 
-            <div id="rooms">
-                {% for room in rooms %}
-                <div id="{{ room.id }}" class="select-room list-group-item list-group-item-action py-3 lh-sm" role="button">
-                    <div class="d-flex w-100 align-items-center justify-content-between">
-                        <strong class="recipient_name mb-1">{{ room.get_name()|title }}</strong>
-                        <small>timestamp</small>
-                    </div>
-                    <div class="col-10 mb-1 small">Message text here.</div>
-                </div>
-                {% endfor %}
-            </div>
+            <div id="rooms"></div>
         </div>
     </nav>
 

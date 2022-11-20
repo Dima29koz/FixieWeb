@@ -7,6 +7,6 @@ from ...utils.role_required import allowed_roles
 
 @messenger.route("/chat", methods=['GET', 'POST'])
 @login_required
-@allowed_roles(roles={'Admin', 'Member'})
+@allowed_roles(roles={'Admin', 'Employee', 'Support'})
 def chat():
     return render_template("chat.html", username=current_user.user_name, rooms=current_user.chats)

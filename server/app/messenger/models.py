@@ -38,6 +38,21 @@ class Chat(db.Model):
         users.remove(current_user)
         return ', '.join([user.user_name for user in users])
 
+    def get_last_msg_data(self):
+        msg_data = {'timestamp': '', 'text': ''}
+        if self.messages:
+            last_msg = sorted(self.messages, key=lambda msg: msg.timestamp, reverse=True)[0]
+            msg_data['timestamp'] = last_msg.timestamp
+            msg_data['text'] = last_msg.data
+        return msg_data
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.get_name().title(),
+            'last_msg': self.get_last_msg_data(),
+        }
+
 
 class Message(db.Model):
     def __init__(self,
@@ -71,7 +86,8 @@ class Message(db.Model):
         return {
             'username': self.sender.user_name,
             'msg': self.data,
-            'timestamp': f'{self.timestamp.isoformat()}Z'
+            'timestamp': f'{self.timestamp.isoformat()}Z',
+            'chat_id': self.chat_id,
         }
 
 
