@@ -1,11 +1,13 @@
 import os
+from random import choice
 
-from flask import send_file, jsonify
+from flask import send_file, jsonify, request
 from flask_login import login_required, current_user
 
 from . import api
-from ..main.models import get_users_by_role, get_users, get_user_by_name
+from ..main.models import get_users_by_role, get_users, get_user_by_name, get_client_by_email, Client
 from ..messenger.models import get_chat_by_recipient, Chat
+from ..incident_management.models import Incident
 from ...utils.role_required import allowed_roles
 
 
@@ -51,3 +53,19 @@ def get_created_chat(recipient_name: str):
         name=chat.get_name(),
         members=[{'id': user.id, 'name': user.user_name} for user in chat.users],
     )
+
+
+@api.route('/api/create_incident', methods=['POST'])
+def create_incident():
+    request_data = request.get_json()
+    client = get_client_by_email(request_data.get('email'))
+    if not client:
+        client = Client(request_data.get('name'), request_data.get('email'))
+    incident = Incident()
+    incident.client_id = client.id
+    incident.subject = request_data.get('subject')
+    incident.description = request_data.get('description')
+    incident.type_id = 1
+    incident.responsible_employee = choice(get_users_by_role('Support'))
+    incident.add()
+    return 'OK', 200,

@@ -57,7 +57,7 @@ class IncidentModelView(sqla.ModelView):
 
     def on_model_change(self, form, model, is_created):
         if is_created:
-            model.creator = current_user
+            model.employee_id = current_user.id
             model.status = RequestStatus.query.filter_by(name='Открыта').first()
             model.responsible_employee = choice(get_users_by_role('Support'))
         else:

@@ -151,3 +151,36 @@ class Role(db.Model):
 
     def __repr__(self):
         return self.name
+
+
+class Client(db.Model):
+    def __init__(self, name, email):
+        self.name = name
+        self.email = email
+        self.add()
+
+    __tablename__ = 'clients'
+    id = db.Column(db.Integer(), primary_key=True)
+    email = db.Column(db.String(50), unique=True)
+    name = db.Column(db.String(50))
+
+    def add(self):
+        try:
+            db.session.add(self)
+            db.session.commit()
+        except Exception as e:
+            print(e)
+            db.session.rollback()
+
+    def __repr__(self):
+        return self.name
+
+
+def get_client_by_email(email: str) -> Client | None:
+    """returns user by user_name if user exists"""
+    return Client.query.filter_by(email=email).first()
+
+
+def get_client_by_id(client_id: int) -> Client | None:
+    """returns user by user_name if user exists"""
+    return Client.query.filter_by(id=client_id).first()
